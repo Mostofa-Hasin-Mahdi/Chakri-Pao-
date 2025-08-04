@@ -67,6 +67,33 @@ function JobApplications() {
     }
   };
 
+  const handleDownloadResume = (filename) => {
+    if (filename) {
+      const link = document.createElement('a');
+      link.href = `http://localhost:3001/uploads/${filename}`;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const getFileIcon = (filename) => {
+    if (filename) {
+      const extension = filename.split('.').pop().toLowerCase();
+      switch (extension) {
+        case 'pdf':
+          return 'bi-file-earmark-pdf';
+        case 'doc':
+        case 'docx':
+          return 'bi-file-earmark-word';
+        default:
+          return 'bi-file-earmark';
+      }
+    }
+    return 'bi-file-earmark';
+  };
+
   return (
     <div
       className="min-vh-100 position-relative"
@@ -209,6 +236,38 @@ function JobApplications() {
                             {application.status ? application.status.charAt(0).toUpperCase() + application.status.slice(1) : 'Pending'}
                           </span>
                         </div>
+
+                        {/* Resume Section */}
+                        {application.resume && (
+                          <div className="mb-3">
+                            <div 
+                              className="p-3 rounded-3"
+                              style={{
+                                backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                                border: '1px solid rgba(25, 118, 210, 0.2)'
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between">
+                                <div className="d-flex align-items-center">
+                                  <i className={`bi ${getFileIcon(application.resume)} text-primary me-2`} style={{ fontSize: '1.2rem' }}></i>
+                                  <span className="text-muted small">{application.resume}</span>
+                                </div>
+                                <button
+                                  className="btn btn-outline-primary btn-sm"
+                                  onClick={() => handleDownloadResume(application.resume)}
+                                  style={{
+                                    borderRadius: '6px',
+                                    padding: '4px 8px',
+                                    fontSize: '0.8rem'
+                                  }}
+                                >
+                                  <i className="bi bi-download me-1"></i>
+                                  Download
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
 
                         {(!application.status || application.status === 'pending') && (
                           <div className="d-flex gap-2 mt-3">

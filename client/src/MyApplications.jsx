@@ -120,7 +120,7 @@ function MyApplications() {
               </div>
             ) : (
               <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                {applications.map((application) => (
+                {applications.filter(app => app.jobId).map((application) => (
                   <div key={application._id} className="col">
                     <div 
                       className="card h-100 border-0 shadow-lg rounded-4"
@@ -137,8 +137,8 @@ function MyApplications() {
                         <div className="d-flex justify-content-between align-items-start mb-3">
                           <div className="d-flex align-items-center">
                             <img 
-                              src={`https://api.dicebear.com/7.x/initials/svg?seed=${application.jobId.companyname}&backgroundColor=1976d2&textColor=ffffff`}
-                              alt={application.jobId.companyname}
+                              src={`https://api.dicebear.com/7.x/initials/svg?seed=${application.jobId?.companyname || 'Company'}&backgroundColor=1976d2&textColor=ffffff`}
+                              alt={application.jobId?.companyname || 'Company'}
                               className="rounded-circle me-3"
                               style={{ 
                                 width: '50px', 
@@ -149,7 +149,7 @@ function MyApplications() {
                               }}
                             />
                             <h5 className="card-title text-primary fw-bold mb-0">
-                              {application.jobId.companyname}
+                              {application.jobId?.companyname || 'Unknown Company'}
                             </h5>
                           </div>
                           <span 
@@ -170,7 +170,7 @@ function MyApplications() {
 
                         <h6 className="card-subtitle mb-3 text-muted">
                           <i className="bi bi-briefcase me-2"></i>
-                          {application.jobId.jobrole}
+                          {application.jobId?.jobrole || 'Unknown Role'}
                         </h6>
 
                         <div className="d-flex align-items-center mb-3">
@@ -183,13 +183,13 @@ function MyApplications() {
                             }}
                           >
                             <i className="bi bi-currency-dollar me-1"></i>
-                            Tk. {application.jobId.salary}
+                            Tk. {application.jobId?.salary || 'N/A'}
                           </span>
                         </div>
 
                         <p className="card-text text-muted">
                           <i className="bi bi-geo-alt me-2"></i>
-                          {application.jobId.location}
+                          {application.jobId?.location || 'Unknown Location'}
                         </p>
 
                         <p className="card-text text-muted">

@@ -38,7 +38,10 @@ function Users() {
       });
       const applicationMap = {};
       response.data.forEach(app => {
-        applicationMap[app.jobId._id] = app.status;
+        // Check if jobId exists and has _id property
+        if (app.jobId && app.jobId._id) {
+          applicationMap[app.jobId._id] = app.status;
+        }
       });
       setApplications(applicationMap);
     } catch (error) {
@@ -67,15 +70,44 @@ function Users() {
 
   const handleApply = async (jobId) => {
     try {
-      const response = await axios.post(`http://localhost:3001/apply/${jobId}`, {}, {
+      // Check if user has uploaded a resume
+      const resumeFile = localStorage.getItem('resumeFile');
+      if (!resumeFile) {
+        alert('Please upload your resume in your profile before applying for jobs');
+        navigate('/profile');
+        return;
+      }
+
+      // Create FormData with resume file
+      const formData = new FormData();
+      
+      // Prompt user to select resume file for this specific application
+      const file = await new Promise((resolve) => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf,.doc,.docx';
+        input.onchange = (e) => resolve(e.target.files[0]);
+        input.click();
+      });
+
+      if (!file) {
+        alert('Please select a resume file to apply');
+        return;
+      }
+
+      formData.append('resume', file);
+
+      const response = await axios.post(`http://localhost:3001/apply/${jobId}`, formData, {
         headers: {
+          'Content-Type': 'multipart/form-data',
           'x-user-username': username,
           'x-user-role': role
         }
       });
       
       if (response.data.success) {
-        fetchApplications();
+        // Refresh applications immediately
+        await fetchApplications();
         alert('Application submitted successfully!');
       }
     } catch (error) {

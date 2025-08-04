@@ -13,11 +13,20 @@ function Profile() {
     appliedJobs: 0,
     interviewCalls: 0
   });
+  const [resumeFile, setResumeFile] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [currentResume, setCurrentResume] = useState('');
 
   useEffect(() => {
     if (!role) {
       navigate('/login');
       return;
+    }
+
+    // Load current resume from localStorage
+    const storedResume = localStorage.getItem('resumeFile');
+    if (storedResume) {
+      setCurrentResume(storedResume);
     }
 
     const fetchStats = async () => {
@@ -66,6 +75,61 @@ function Profile() {
 
     fetchStats();
   }, [role, username]);
+
+  const handleResumeUpload = async (e) => {
+    e.preventDefault();
+    if (!resumeFile) {
+      setUploadStatus('Please select a file');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('resume', resumeFile);
+
+    try {
+      setUploadStatus('Uploading...');
+      const response = await axios.post('http://localhost:3001/upload-resume', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'x-user-role': role,
+          'x-user-username': username
+        }
+      });
+
+      if (response.data.success) {
+        setUploadStatus('Resume uploaded successfully!');
+        setCurrentResume(response.data.filename);
+        localStorage.setItem('resumeFile', response.data.filename);
+        setResumeFile(null);
+        // Reset file input
+        e.target.reset();
+      }
+    } catch (error) {
+      console.error('Error uploading resume:', error);
+      setUploadStatus(error.response?.data?.message || 'Failed to upload resume');
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(file.type)) {
+        setUploadStatus('Please select a PDF or Word document');
+        return;
+      }
+      
+      // Check file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setUploadStatus('File size must be less than 5MB');
+        return;
+      }
+      
+      setResumeFile(file);
+      setUploadStatus('');
+    }
+  };
 
   if (!role) {
     navigate('/login');
@@ -161,34 +225,100 @@ function Profile() {
               )}
 
               {role === 'jobseeker' && (
-                <div className="mb-4">
-                  <div className="row g-3">
-                    <div className="col-6">
-                      <div 
-                        className="p-3 rounded-3"
-                        style={{
-                          backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                          border: '1px solid rgba(25, 118, 210, 0.2)'
-                        }}
-                      >
-                        <h6 className="text-primary mb-1">Jobs Applied</h6>
-                        <h3 className="m-0 fw-bold">{stats.appliedJobs}</h3>
+                <>
+                  <div className="mb-4">
+                    <div className="row g-3">
+                      <div className="col-6">
+                        <div 
+                          className="p-3 rounded-3"
+                          style={{
+                            backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                            border: '1px solid rgba(25, 118, 210, 0.2)'
+                          }}
+                        >
+                          <h6 className="text-primary mb-1">Jobs Applied</h6>
+                          <h3 className="m-0 fw-bold">{stats.appliedJobs}</h3>
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-6">
-                      <div 
-                        className="p-3 rounded-3"
-                        style={{
-                          backgroundColor: 'rgba(46, 125, 50, 0.1)',
-                          border: '1px solid rgba(46, 125, 50, 0.2)'
-                        }}
-                      >
-                        <h6 className="text-success mb-1">Interview Calls</h6>
-                        <h3 className="m-0 fw-bold">{stats.interviewCalls}</h3>
+                      <div className="col-6">
+                        <div 
+                          className="p-3 rounded-3"
+                          style={{
+                            backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                            border: '1px solid rgba(46, 125, 50, 0.2)'
+                          }}
+                        >
+                          <h6 className="text-success mb-1">Interview Calls</h6>
+                          <h3 className="m-0 fw-bold">{stats.interviewCalls}</h3>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+
+                  {/* Resume Upload Section */}
+                  <div className="mb-4">
+                    <div 
+                      className="p-4 rounded-3"
+                      style={{
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                        border: '1px solid rgba(255, 193, 7, 0.2)'
+                      }}
+                    >
+                      <h6 className="text-warning mb-3">
+                        <i className="bi bi-file-earmark-text me-2"></i>
+                        Resume Upload
+                      </h6>
+                      
+                      {currentResume && (
+                        <div className="alert alert-info mb-3" role="alert">
+                          <i className="bi bi-check-circle me-2"></i>
+                          Current resume: {currentResume}
+                        </div>
+                      )}
+
+                      <form onSubmit={handleResumeUpload}>
+                        <div className="mb-3">
+                          <label className="form-label text-muted fw-medium">
+                            <i className="bi bi-upload me-2"></i>
+                            Upload Resume (PDF or Word)
+                          </label>
+                          <input
+                            type="file"
+                            className="form-control"
+                            accept=".pdf,.doc,.docx"
+                            onChange={handleFileChange}
+                            required
+                          />
+                          <div className="form-text">
+                            Maximum file size: 5MB. Supported formats: PDF, DOC, DOCX
+                          </div>
+                        </div>
+                        
+                        {uploadStatus && (
+                          <div className={`alert ${uploadStatus.includes('successfully') ? 'alert-success' : 'alert-danger'} mb-3`}>
+                            {uploadStatus}
+                          </div>
+                        )}
+                        
+                        <button 
+                          type="submit" 
+                          className="btn btn-warning"
+                          disabled={!resumeFile}
+                          style={{
+                            borderRadius: '8px',
+                            padding: '8px 16px',
+                            fontSize: '0.9rem',
+                            fontWeight: '500',
+                            transition: 'all 0.3s ease'
+                          }}
+                        >
+                          <i className="bi bi-upload me-2"></i>
+                          Upload Resume
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </>
               )}
 
               <div className="d-grid gap-3">

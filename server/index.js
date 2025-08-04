@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const UserModel = require('./models/Users');
 const UsersInfoModel = require('./models/usersinfo');
 const ApplicationModel = require('./models/Applications');
@@ -9,6 +12,42 @@ const bcrypt = require('bcrypt');
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    // Allow only PDF and Word documents
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF and Word documents are allowed!'), false);
+    }
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  }
+});
+
+// Serve uploaded files
+app.use('/uploads', express.static(uploadsDir));
 
 mongoose.connect("mongodb://127.0.0.1:27017/crud");
 
@@ -194,7 +233,7 @@ app.get("/debug/users", async (req, res) => {
 });
 
 // apply for a job
-app.post("/apply/:jobId", authenticateUser, async (req, res) => {
+app.post("/apply/:jobId", authenticateUser, upload.single('resume'), async (req, res) => {
   try {
     const jobId = req.params.jobId;
     const jobseeker = req.headers['x-user-username'];
@@ -210,6 +249,11 @@ app.post("/apply/:jobId", authenticateUser, async (req, res) => {
       return res.status(404).json({ message: 'Job not found' });
     }
 
+    // Check if resume file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ message: 'Resume file is required' });
+    }
+
     // jodi already applied kore thake
     const existingApplication = await ApplicationModel.findOne({
       jobId,
@@ -217,16 +261,25 @@ app.post("/apply/:jobId", authenticateUser, async (req, res) => {
     });
 
     if (existingApplication) {
+      // Delete uploaded file if application already exists
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
       return res.status(400).json({ message: 'You have already applied for this job' });
     }
 
     const application = await ApplicationModel.create({
       jobId,
-      jobseeker
+      jobseeker,
+      resume: req.file.filename
     });
 
     res.json({ success: true, application });
   } catch (err) {
+    // Delete uploaded file if there's an error
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     res.status(500).json({ message: err.message });
   }
 });
@@ -263,10 +316,41 @@ app.get("/my-applications", authenticateUser, async (req, res) => {
     }
 
     const applications = await ApplicationModel.find({ jobseeker })
-      .populate('jobId', 'companyname jobrole salary location');
+      .populate('jobId', 'companyname jobrole salary location createdBy');
 
-    res.json(applications);
+    // Filter out applications with null jobId (orphaned applications)
+    const validApplications = applications.filter(app => app.jobId !== null);
+
+    res.json(validApplications);
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Upload resume (jobseeker only)
+app.post("/upload-resume", authenticateUser, upload.single('resume'), async (req, res) => {
+  try {
+    const role = req.headers['x-user-role'];
+    const username = req.headers['x-user-username'];
+
+    if (role !== 'jobseeker') {
+      return res.status(403).json({ message: 'Only job seekers can upload resumes' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Resume file is required' });
+    }
+
+    res.json({ 
+      success: true, 
+      filename: req.file.filename,
+      message: 'Resume uploaded successfully' 
+    });
+  } catch (err) {
+    // Delete uploaded file if there's an error
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     res.status(500).json({ message: err.message });
   }
 });
@@ -285,8 +369,8 @@ app.put("/applications/:id/status", authenticateUser, isEmployer, async (req, re
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    // Check if job belongs to the employer
-    if (application.jobId.createdBy !== username) {
+    // Check if job exists and belongs to the employer
+    if (!application.jobId || application.jobId.createdBy !== username) {
       return res.status(403).json({ message: 'You can only update applications for your own jobs' });
     }
 

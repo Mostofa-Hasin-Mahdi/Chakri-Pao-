@@ -15,6 +15,10 @@ const ApplicationSchema = new mongoose.Schema({
     enum: ['pending', 'accepted', 'rejected'],
     default: 'pending'
   },
+  resume: {
+    type: String, // Store the file path - optional for backward compatibility
+    required: false
+  },
   appliedAt: {
     type: Date,
     default: Date.now
