@@ -156,35 +156,6 @@ A modern, full-stack job portal built with the MERN stack (MongoDB, Express.js, 
    - Frontend: http://localhost:5173
    - Backend: http://localhost:3001
 
-## 🎨 UI Components
-
-### **Job Cards**
-- Company avatar with initials
-- Job details (role, salary, location)
-- Application status indicators
-- Action buttons (Apply/Update/Delete)
-
-### **Application Cards**
-- Candidate information
-- Resume download functionality
-- Status management buttons
-- Application timeline
-
-### **Profile Dashboard**
-- User statistics
-- Resume upload interface
-- Quick navigation menu
-- Role-based features
-
-## 🔒 Security Features
-
-- **Password Security**: Bcrypt hashing with salt rounds
-- **File Upload Security**: Type validation, size limits, secure storage
-- **Authentication**: JWT-like session management
-- **Authorization**: Role-based access control
-- **Input Validation**: Server-side validation for all inputs
-- **Error Handling**: Comprehensive error handling and user feedback
-
 ## 🤝 Contributing
 
 1. Fork the repository
