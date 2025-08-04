@@ -1,34 +1,39 @@
 # 🎯 Chakri Pao - Job Portal Application
 
 A modern, full-stack job portal built with the MERN stack (MongoDB, Express.js, React.js, Node.js) that connects job seekers with employers through an intuitive and feature-rich platform.
+<img width="823" height="289" alt="image" src="https://github.com/user-attachments/assets/5763df09-b262-4ce3-8ae9-c328d7c8f5cf" />
+
 
 ![Chakri Pao](https://img.shields.io/badge/Chakri%20Pao-Job%20Portal-blue?style=for-the-badge&logo=react)
 ![MERN Stack](https://img.shields.io/badge/MERN-Stack-green?style=for-the-badge&logo=mongodb)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
 ## 🌟 Key Features
 
 ### 👥 **Dual User System**
 - **Job Seekers**: Browse jobs, upload resumes, apply for positions, track application status
 - **Employers**: Post job listings, review applications, manage candidates, download resumes
+- <img width="710" height="788" alt="image" src="https://github.com/user-attachments/assets/79539d92-12a0-42b8-8eb7-48304bf2f1e6" />
+
 
 ### 🔍 **Advanced Job Search**
 - Real-time search functionality
 - Filter by company name, job role, or location
-- Instant results with beautiful job cards
-- Responsive design for all devices
+- <img width="1331" height="650" alt="image" src="https://github.com/user-attachments/assets/12bc38c7-139f-480c-aff6-3eafc95d4195" />
+
 
 ### 📄 **Resume Management System**
 - **Upload Support**: PDF, DOC, DOCX files (up to 5MB)
-- **Secure Storage**: Files stored on server with unique naming
 - **Easy Access**: Employers can download and review resumes
 - **File Validation**: Client and server-side file type/size validation
+- <img width="676" height="833" alt="image" src="https://github.com/user-attachments/assets/6af61de5-3601-44ad-a440-431daed542c9" />
+
 
 ### 📊 **Application Tracking**
 - **Real-time Status Updates**: Pending → Accepted/Rejected
-- **Visual Indicators**: Color-coded status badges with icons
 - **Application History**: Complete timeline of all applications
-- **Instant Notifications**: Status change alerts
+- **For Job Seeker**:
+- <img width="1311" height="810" alt="image" src="https://github.com/user-attachments/assets/6ec585a4-a941-4e69-8e69-372b21e318f3" />
+
 
 ### 🎨 **Modern UI/UX**
 - **Gradient Backgrounds**: Animated gradient backgrounds
@@ -40,7 +45,6 @@ A modern, full-stack job portal built with the MERN stack (MongoDB, Express.js, 
 ### 🔐 **Security Features**
 - **Password Hashing**: Bcrypt encryption for user passwords
 - **Role-based Access**: Separate permissions for job seekers and employers
-- **Authentication Middleware**: Protected routes and endpoints
 - **File Upload Security**: File type and size validation
 
 ## 🛠 Technology Stack
