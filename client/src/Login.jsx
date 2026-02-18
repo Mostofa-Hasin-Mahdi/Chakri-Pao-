@@ -13,9 +13,9 @@ function Login({ setRole }) {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-    
+
     try {
-      const response = await axios.post('http://localhost:3001/login', { username, password });
+      const response = await axios.post('/login', { username, password });
       if (response.data.success) {
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('username', username);
@@ -57,21 +57,21 @@ function Login({ setRole }) {
             <div className="text-center mb-5">
               <div className="d-flex align-items-center justify-content-center mb-3">
                 <h1 className="text-white display-4 m-0 fw-bold">Chakri Pao</h1>
-                <img 
-                  src="logo.png" 
-                  alt="Logo" 
+                <img
+                  src="logo.png"
+                  alt="Logo"
                   className="ms-3"
-                  style={{ 
-                    width: '60px', 
+                  style={{
+                    width: '60px',
                     height: '60px',
                     filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.3))'
-                  }} 
+                  }}
                 />
               </div>
               <p className="text-white-50 h5">Your one stop Job Portal</p>
             </div>
 
-            <div 
+            <div
               className="bg-white rounded-4 p-4 p-md-5 shadow-lg"
               style={{
                 backdropFilter: 'blur(10px)',
@@ -86,10 +86,10 @@ function Login({ setRole }) {
                   Login
                 </h2>
               </div>
-              
+
               {error && (
-                <div 
-                  className="alert alert-danger d-flex align-items-center mb-4" 
+                <div
+                  className="alert alert-danger d-flex align-items-center mb-4"
                   role="alert"
                   style={{
                     backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -101,7 +101,7 @@ function Login({ setRole }) {
                   <div>{error}</div>
                 </div>
               )}
-              
+
               <form onSubmit={handleLogin}>
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
@@ -124,7 +124,7 @@ function Login({ setRole }) {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-key me-2"></i>
@@ -146,10 +146,10 @@ function Login({ setRole }) {
                     }}
                   />
                 </div>
-                
+
                 <div className="d-grid gap-3">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="btn btn-primary btn-lg"
                     disabled={isLoading}
                     style={{
@@ -175,9 +175,9 @@ function Login({ setRole }) {
                       </>
                     )}
                   </button>
-                  
-                  <Link 
-                    to="/register" 
+
+                  <Link
+                    to="/register"
                     className="btn btn-outline-secondary btn-lg"
                     style={{
                       borderRadius: '12px',

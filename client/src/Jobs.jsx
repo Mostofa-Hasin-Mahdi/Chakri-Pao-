@@ -16,7 +16,7 @@ const Jobs = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/jobs');
+      const response = await axios.get('/jobs');
       setJobs(response.data);
       setFilteredJobs(response.data);
     } catch (error) {
@@ -27,7 +27,7 @@ const Jobs = () => {
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = jobs.filter(job => 
+    const filtered = jobs.filter(job =>
       job.companyname.toLowerCase().includes(term) ||
       job.jobrole.toLowerCase().includes(term) ||
       job.location.toLowerCase().includes(term)
@@ -37,7 +37,7 @@ const Jobs = () => {
 
   const handleApply = async (jobId) => {
     try {
-      const response = await axios.post(`http://localhost:3001/apply/${jobId}`, {}, {
+      const response = await axios.post(`/apply/${jobId}`, {}, {
         headers: {
           'x-user-username': username,
           'x-user-role': userRole

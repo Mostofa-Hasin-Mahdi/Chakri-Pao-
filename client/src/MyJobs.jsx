@@ -19,7 +19,7 @@ function MyJobs() {
   }, []);
 
   const fetchJobs = () => {
-    axios.get('http://localhost:3001')
+    axios.get('')
       .then(result => {
         const myJobs = result.data.filter(job => job.createdBy === username);
         setJobs(myJobs);
@@ -33,7 +33,7 @@ function MyJobs() {
   const handleDelete = (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this job?");
     if (confirmDelete) {
-      axios.delete(`http://localhost:3001/deleteuser/${id}`, {
+      axios.delete(`/deleteuser/${id}`, {
         headers: {
           'x-user-role': role,
           'x-user-username': username
@@ -74,8 +74,8 @@ function MyJobs() {
             <h2 className="m-0 text-white fw-bold">My Job Posts</h2>
           </div>
           <div className="d-flex align-items-center gap-3">
-            <Link 
-              to="/create" 
+            <Link
+              to="/create"
               className="btn btn-success"
               style={{
                 borderRadius: '12px',
@@ -96,8 +96,8 @@ function MyJobs() {
         </div>
 
         {error && (
-          <div 
-            className="alert alert-danger d-flex align-items-center mb-4" 
+          <div
+            className="alert alert-danger d-flex align-items-center mb-4"
             role="alert"
             style={{
               backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -111,7 +111,7 @@ function MyJobs() {
         )}
 
         {jobs.length === 0 ? (
-          <div 
+          <div
             className="text-center p-5"
             style={{
               backdropFilter: 'blur(10px)',
@@ -124,8 +124,8 @@ function MyJobs() {
             <i className="bi bi-briefcase text-primary" style={{ fontSize: '3rem' }}></i>
             <h3 className="mt-3 text-primary">No Jobs Posted Yet</h3>
             <p className="text-muted">Start by posting your first job listing</p>
-            <Link 
-              to="/create" 
+            <Link
+              to="/create"
               className="btn btn-primary mt-3"
               style={{
                 borderRadius: '12px',
@@ -146,7 +146,7 @@ function MyJobs() {
           <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {jobs.map((job, index) => (
               <div key={index} className="col">
-                <div 
+                <div
                   className="card h-100 border-0 shadow-lg rounded-4"
                   style={{
                     backdropFilter: 'blur(10px)',
@@ -160,7 +160,7 @@ function MyJobs() {
                   <div className="card-body p-4">
                     <div className="d-flex justify-content-between align-items-start mb-3">
                       <h5 className="card-title text-primary fw-bold mb-0">{job.companyname}</h5>
-                      <span 
+                      <span
                         className="badge rounded-pill"
                         style={{
                           backgroundColor: 'rgba(25, 118, 210, 0.1)',
@@ -177,7 +177,7 @@ function MyJobs() {
                       {job.jobrole}
                     </h6>
                     <div className="d-flex align-items-center mb-3">
-                      <span 
+                      <span
                         className="badge rounded-pill px-3 py-2"
                         style={{
                           backgroundColor: 'rgba(46, 125, 50, 0.1)',
@@ -193,8 +193,8 @@ function MyJobs() {
                       {job.location}
                     </p>
                     <div className="d-flex gap-2 mt-3">
-                      <Link 
-                        to={`/update/${job._id}`} 
+                      <Link
+                        to={`/update/${job._id}`}
                         className='btn btn-outline-primary btn-sm flex-grow-1'
                         style={{
                           borderRadius: '8px',

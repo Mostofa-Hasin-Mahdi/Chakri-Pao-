@@ -22,7 +22,7 @@ function UpdateUser() {
       return;
     }
 
-    axios.get(`http://localhost:3001/getuser/${id}`, {
+    axios.get(`/getuser/${id}`, {
       headers: {
         'x-user-role': role
       }
@@ -52,7 +52,7 @@ function UpdateUser() {
     }
 
     try {
-      await axios.put(`http://localhost:3001/updateuser/${id}`, {
+      await axios.put(`/updateuser/${id}`, {
         companyname: company,
         jobrole: jobrole,
         salary: salary,
@@ -64,7 +64,7 @@ function UpdateUser() {
           'x-user-username': username
         }
       });
-      
+
       console.log('Job updated successfully');
       navigate('/');
     } catch (err) {
@@ -97,7 +97,7 @@ function UpdateUser() {
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
-            <div 
+            <div
               className="bg-white rounded-4 p-4 p-md-5 shadow-lg"
               style={{
                 backdropFilter: 'blur(10px)',
@@ -113,10 +113,10 @@ function UpdateUser() {
                 </h2>
                 <ProfileMenu />
               </div>
-              
+
               {error && (
-                <div 
-                  className="alert alert-danger d-flex align-items-center mb-4" 
+                <div
+                  className="alert alert-danger d-flex align-items-center mb-4"
                   role="alert"
                   style={{
                     backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -128,17 +128,17 @@ function UpdateUser() {
                   <div>{error}</div>
                 </div>
               )}
-              
+
               <form onSubmit={handleUpdate}>
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-building me-2"></i>
                     Company Name
                   </label>
-                  <input 
-                    type="text" 
-                    value={company} 
-                    onChange={(e) => setCompany(e.target.value)} 
+                  <input
+                    type="text"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
                     className='form-control form-control-lg'
                     placeholder="Enter company name"
                     required
@@ -151,16 +151,16 @@ function UpdateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-briefcase me-2"></i>
                     Job Role
                   </label>
-                  <input 
-                    type="text" 
-                    value={jobrole} 
-                    onChange={(e) => setJobrole(e.target.value)} 
+                  <input
+                    type="text"
+                    value={jobrole}
+                    onChange={(e) => setJobrole(e.target.value)}
                     className='form-control form-control-lg'
                     placeholder="Enter job role"
                     required
@@ -173,16 +173,16 @@ function UpdateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-currency-dollar me-2"></i>
                     Salary
                   </label>
-                  <input 
-                    type="number" 
-                    value={salary} 
-                    onChange={(e) => setSalary(e.target.value)} 
+                  <input
+                    type="number"
+                    value={salary}
+                    onChange={(e) => setSalary(e.target.value)}
                     className='form-control form-control-lg'
                     placeholder="Enter salary"
                     required
@@ -195,16 +195,16 @@ function UpdateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-people me-2"></i>
                     Vacancy
                   </label>
-                  <input 
-                    type="number" 
-                    value={vacancy} 
-                    onChange={(e) => setVacancy(e.target.value)} 
+                  <input
+                    type="number"
+                    value={vacancy}
+                    onChange={(e) => setVacancy(e.target.value)}
                     className='form-control form-control-lg'
                     placeholder="Enter number of vacancies"
                     required
@@ -217,16 +217,16 @@ function UpdateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-geo-alt me-2"></i>
                     Location
                   </label>
-                  <input 
-                    type="text" 
-                    value={location} 
-                    onChange={(e) => setLocation(e.target.value)} 
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
                     className='form-control form-control-lg'
                     placeholder="Enter job location"
                     required
@@ -239,10 +239,10 @@ function UpdateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="d-grid gap-3">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="btn btn-primary btn-lg"
                     disabled={isLoading}
                     style={{
@@ -268,9 +268,9 @@ function UpdateUser() {
                       </>
                     )}
                   </button>
-                  
-                  <button 
-                    type="button" 
+
+                  <button
+                    type="button"
                     className="btn btn-outline-secondary btn-lg"
                     onClick={() => navigate('/')}
                     style={{

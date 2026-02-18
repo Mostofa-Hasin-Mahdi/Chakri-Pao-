@@ -24,7 +24,7 @@ function JobApplications() {
 
   const fetchApplications = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/applications/${jobId}`, {
+      const response = await axios.get(`/applications/${jobId}`, {
         headers: {
           'x-user-role': role,
           'x-user-username': username
@@ -41,7 +41,7 @@ function JobApplications() {
 
   const fetchJobDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/getuser/${jobId}`);
+      const response = await axios.get(`/getuser/${jobId}`);
       setJobDetails(response.data);
     } catch (err) {
       console.error('Error fetching job details:', err);
@@ -51,7 +51,7 @@ function JobApplications() {
 
   const handleStatusUpdate = async (applicationId, newStatus) => {
     try {
-      await axios.put(`http://localhost:3001/applications/${applicationId}/status`, 
+      await axios.put(`/applications/${applicationId}/status`,
         { status: newStatus },
         {
           headers: {
@@ -70,7 +70,8 @@ function JobApplications() {
   const handleDownloadResume = (filename) => {
     if (filename) {
       const link = document.createElement('a');
-      link.href = `http://localhost:3001/uploads/${filename}`;
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      link.href = `${baseUrl}/uploads/${filename}`;
       link.download = filename;
       document.body.appendChild(link);
       link.click();
@@ -122,8 +123,8 @@ function JobApplications() {
         </div>
 
         {error && (
-          <div 
-            className="alert alert-danger d-flex align-items-center mb-4" 
+          <div
+            className="alert alert-danger d-flex align-items-center mb-4"
             role="alert"
             style={{
               backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -145,7 +146,7 @@ function JobApplications() {
         ) : (
           <>
             {jobDetails && (
-              <div 
+              <div
                 className="mb-4 p-4"
                 style={{
                   backdropFilter: 'blur(10px)',
@@ -174,7 +175,7 @@ function JobApplications() {
             )}
 
             {applications.length === 0 ? (
-              <div 
+              <div
                 className="text-center p-5"
                 style={{
                   backdropFilter: 'blur(10px)',
@@ -192,7 +193,7 @@ function JobApplications() {
               <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 {applications.map((application) => (
                   <div key={application._id} className="col">
-                    <div 
+                    <div
                       className="card h-100 border-0 shadow-lg rounded-4"
                       style={{
                         backdropFilter: 'blur(10px)',
@@ -205,7 +206,7 @@ function JobApplications() {
                     >
                       <div className="card-body p-4">
                         <div className="d-flex align-items-center mb-3">
-                          <div 
+                          <div
                             className="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3"
                             style={{ width: '50px', height: '50px' }}
                           >
@@ -221,18 +222,16 @@ function JobApplications() {
                         </div>
 
                         <div className="mb-3">
-                          <span 
-                            className={`badge rounded-pill px-3 py-2 ${
-                              application.status === 'accepted' ? 'bg-success' :
+                          <span
+                            className={`badge rounded-pill px-3 py-2 ${application.status === 'accepted' ? 'bg-success' :
                               application.status === 'rejected' ? 'bg-danger' :
-                              'bg-warning'
-                            }`}
+                                'bg-warning'
+                              }`}
                           >
-                            <i className={`bi ${
-                              application.status === 'accepted' ? 'bi-check-circle' :
+                            <i className={`bi ${application.status === 'accepted' ? 'bi-check-circle' :
                               application.status === 'rejected' ? 'bi-x-circle' :
-                              'bi-clock'
-                            } me-1`}></i>
+                                'bi-clock'
+                              } me-1`}></i>
                             {application.status ? application.status.charAt(0).toUpperCase() + application.status.slice(1) : 'Pending'}
                           </span>
                         </div>
@@ -240,7 +239,7 @@ function JobApplications() {
                         {/* Resume Section */}
                         {application.resume && (
                           <div className="mb-3">
-                            <div 
+                            <div
                               className="p-3 rounded-3"
                               style={{
                                 backgroundColor: 'rgba(25, 118, 210, 0.1)',

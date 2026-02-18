@@ -33,13 +33,13 @@ function Profile() {
       try {
         if (role === 'employer') {
           // Fetch employer's jobs
-          const jobsResponse = await axios.get('http://localhost:3001');
+          const jobsResponse = await axios.get('');
           const myJobs = jobsResponse.data.filter(job => job.createdBy === username);
-          
+
           // Fetch applications for each job
           let totalApplications = 0;
           for (const job of myJobs) {
-            const applicationsResponse = await axios.get(`http://localhost:3001/applications/${job._id}`, {
+            const applicationsResponse = await axios.get(`/applications/${job._id}`, {
               headers: {
                 'x-user-role': role,
                 'x-user-username': username
@@ -54,7 +54,7 @@ function Profile() {
           });
         } else if (role === 'jobseeker') {
           // Fetch jobseeker's applications
-          const applicationsResponse = await axios.get('http://localhost:3001/my-applications', {
+          const applicationsResponse = await axios.get('/my-applications', {
             headers: {
               'x-user-role': role,
               'x-user-username': username
@@ -88,7 +88,7 @@ function Profile() {
 
     try {
       setUploadStatus('Uploading...');
-      const response = await axios.post('http://localhost:3001/upload-resume', formData, {
+      const response = await axios.post('/upload-resume', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'x-user-role': role,
@@ -119,13 +119,13 @@ function Profile() {
         setUploadStatus('Please select a PDF or Word document');
         return;
       }
-      
+
       // Check file size (5MB limit)
       if (file.size > 5 * 1024 * 1024) {
         setUploadStatus('File size must be less than 5MB');
         return;
       }
-      
+
       setResumeFile(file);
       setUploadStatus('');
     }
@@ -158,7 +158,7 @@ function Profile() {
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
-            <div 
+            <div
               className="bg-white rounded-4 p-4 p-md-5 shadow-lg"
               style={{
                 backdropFilter: 'blur(10px)',
@@ -177,7 +177,7 @@ function Profile() {
 
               <div className="mb-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div 
+                  <div
                     className="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3"
                     style={{ width: '60px', height: '60px' }}
                   >
@@ -197,7 +197,7 @@ function Profile() {
                 <div className="mb-4">
                   <div className="row g-3">
                     <div className="col-6">
-                      <div 
+                      <div
                         className="p-3 rounded-3"
                         style={{
                           backgroundColor: 'rgba(25, 118, 210, 0.1)',
@@ -209,7 +209,7 @@ function Profile() {
                       </div>
                     </div>
                     <div className="col-6">
-                      <div 
+                      <div
                         className="p-3 rounded-3"
                         style={{
                           backgroundColor: 'rgba(46, 125, 50, 0.1)',
@@ -229,7 +229,7 @@ function Profile() {
                   <div className="mb-4">
                     <div className="row g-3">
                       <div className="col-6">
-                        <div 
+                        <div
                           className="p-3 rounded-3"
                           style={{
                             backgroundColor: 'rgba(25, 118, 210, 0.1)',
@@ -241,7 +241,7 @@ function Profile() {
                         </div>
                       </div>
                       <div className="col-6">
-                        <div 
+                        <div
                           className="p-3 rounded-3"
                           style={{
                             backgroundColor: 'rgba(46, 125, 50, 0.1)',
@@ -257,7 +257,7 @@ function Profile() {
 
                   {/* Resume Upload Section */}
                   <div className="mb-4">
-                    <div 
+                    <div
                       className="p-4 rounded-3"
                       style={{
                         backgroundColor: 'rgba(255, 193, 7, 0.1)',
@@ -268,7 +268,7 @@ function Profile() {
                         <i className="bi bi-file-earmark-text me-2"></i>
                         Resume Upload
                       </h6>
-                      
+
                       {currentResume && (
                         <div className="alert alert-info mb-3" role="alert">
                           <i className="bi bi-check-circle me-2"></i>
@@ -293,15 +293,15 @@ function Profile() {
                             Maximum file size: 5MB. Supported formats: PDF, DOC, DOCX
                           </div>
                         </div>
-                        
+
                         {uploadStatus && (
                           <div className={`alert ${uploadStatus.includes('successfully') ? 'alert-success' : 'alert-danger'} mb-3`}>
                             {uploadStatus}
                           </div>
                         )}
-                        
-                        <button 
-                          type="submit" 
+
+                        <button
+                          type="submit"
                           className="btn btn-warning"
                           disabled={!resumeFile}
                           style={{
@@ -323,8 +323,8 @@ function Profile() {
 
               <div className="d-grid gap-3">
                 {role === 'employer' && (
-                  <Link 
-                    to="/profile/jobs" 
+                  <Link
+                    to="/profile/jobs"
                     className="btn btn-primary btn-lg"
                     style={{
                       borderRadius: '12px',
@@ -343,8 +343,8 @@ function Profile() {
                 )}
 
                 {role === 'jobseeker' && (
-                  <Link 
-                    to="/profile/applications" 
+                  <Link
+                    to="/profile/applications"
                     className="btn btn-primary btn-lg"
                     style={{
                       borderRadius: '12px',
@@ -362,8 +362,8 @@ function Profile() {
                   </Link>
                 )}
 
-                <Link 
-                  to="/" 
+                <Link
+                  to="/"
                   className="btn btn-outline-secondary btn-lg"
                   style={{
                     borderRadius: '12px',

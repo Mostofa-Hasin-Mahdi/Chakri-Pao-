@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
@@ -30,7 +31,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   fileFilter: function (req, file, cb) {
     // Allow only PDF and Word documents
@@ -49,7 +50,10 @@ const upload = multer({
 // Serve uploaded files
 app.use('/uploads', express.static(uploadsDir));
 
-mongoose.connect("mongodb://127.0.0.1:27017/crud");
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/crud")
+  .then(() => console.log("Connected to MongoDB"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
 // Middleware to check authentication for protected routes
 const authenticateUser = (req, res, next) => {
@@ -118,40 +122,40 @@ app.post("/login", async (req, res) => {
   try {
     console.log('Received login request:', req.body);
     const { username, password } = req.body;
-    
+
     if (!username || !password) {
       console.log('Missing username or password');
-      return res.status(400).json({ 
-        success: false, 
-        message: "Username and password are required" 
+      return res.status(400).json({
+        success: false,
+        message: "Username and password are required"
       });
     }
 
     console.log('Searching for user:', username);
     const user = await UsersInfoModel.findOne({ username });
-    
+
     if (!user) {
       console.log('User not found in database');
-      return res.status(401).json({ 
-        success: false, 
-        message: "Invalid credentials" 
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials"
       });
     }
 
     console.log('User found, comparing password');
     const isPasswordValid = await bcrypt.compare(password, user.password); //hash password er shathe comapre kortese
-    
+
     if (!isPasswordValid) {
       console.log('Password comparison failed');
-      return res.status(401).json({ 
-        success: false, 
-        message: "Invalid credentials" 
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials"
       });
     }
 
     console.log('Login successful, sending response');
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       role: user.role,
       message: "Login successful"
     });
@@ -161,10 +165,10 @@ app.post("/login", async (req, res) => {
       stack: err.stack,
       name: err.name
     });
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: "An error occurred during login",
-      error: err.message 
+      error: err.message
     });
   }
 });
@@ -176,7 +180,7 @@ app.put("/updateuser/:id", authenticateUser, isEmployer, async (req, res) => {
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
     }
-    
+
     // job ta logged in employer er ki na 
     if (job.createdBy !== req.headers['x-user-username']) {
       return res.status(403).json({ message: 'You can only update your own jobs' });
@@ -207,7 +211,7 @@ app.delete("/deleteuser/:id", authenticateUser, isEmployer, async (req, res) => 
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
     }
-    
+
     // Check if the job belongs to the current employer
     if (job.createdBy !== req.headers['x-user-username']) {
       return res.status(403).json({ message: 'You can only delete your own jobs' });
@@ -341,10 +345,10 @@ app.post("/upload-resume", authenticateUser, upload.single('resume'), async (req
       return res.status(400).json({ message: 'Resume file is required' });
     }
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       filename: req.file.filename,
-      message: 'Resume uploaded successfully' 
+      message: 'Resume uploaded successfully'
     });
   } catch (err) {
     // Delete uploaded file if there's an error
@@ -383,6 +387,7 @@ app.put("/applications/:id/status", authenticateUser, isEmployer, async (req, re
   }
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on port 3001...");
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}...`);
 });

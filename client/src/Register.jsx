@@ -16,12 +16,12 @@ function Register() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3001/register', { 
-        username, 
-        password, 
-        role 
+      const response = await axios.post('/register', {
+        username,
+        password,
+        role
       });
-      
+
       if (response.data.success) {
         navigate('/login');
       } else {
@@ -60,21 +60,21 @@ function Register() {
             <div className="text-center mb-5">
               <div className="d-flex align-items-center justify-content-center mb-3">
                 <h1 className="text-white display-4 m-0 fw-bold">Chakri Pao</h1>
-                <img 
-                  src="logo.png" 
-                  alt="Logo" 
+                <img
+                  src="logo.png"
+                  alt="Logo"
                   className="ms-3"
-                  style={{ 
-                    width: '60px', 
+                  style={{
+                    width: '60px',
                     height: '60px',
                     filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.3))'
-                  }} 
+                  }}
                 />
               </div>
               <p className="text-white-50 h5">Your one stop Job Portal</p>
             </div>
 
-            <div 
+            <div
               className="bg-white rounded-4 p-4 p-md-5 shadow-lg"
               style={{
                 backdropFilter: 'blur(10px)',
@@ -89,10 +89,10 @@ function Register() {
                   Create Account
                 </h2>
               </div>
-              
+
               {error && (
-                <div 
-                  className="alert alert-danger d-flex align-items-center mb-4" 
+                <div
+                  className="alert alert-danger d-flex align-items-center mb-4"
                   role="alert"
                   style={{
                     backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -104,7 +104,7 @@ function Register() {
                   <div>{error}</div>
                 </div>
               )}
-              
+
               <form onSubmit={handleRegister}>
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
@@ -127,7 +127,7 @@ function Register() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-key me-2"></i>
@@ -149,7 +149,7 @@ function Register() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-person-badge me-2"></i>
@@ -172,10 +172,10 @@ function Register() {
                     <option value="employer">Employer</option>
                   </select>
                 </div>
-                
+
                 <div className="d-grid gap-3">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="btn btn-primary btn-lg"
                     disabled={isLoading}
                     style={{
@@ -201,9 +201,9 @@ function Register() {
                       </>
                     )}
                   </button>
-                  
-                  <Link 
-                    to="/login" 
+
+                  <Link
+                    to="/login"
                     className="btn btn-outline-secondary btn-lg"
                     style={{
                       borderRadius: '12px',

@@ -20,7 +20,7 @@ function Users() {
   }, [searchTerm]);
 
   const fetchUsers = () => {
-    axios.get(`http://localhost:3001?search=${searchTerm}`)
+    axios.get(`?search=${searchTerm}`)
       .then(result => setUsers(result.data))
       .catch(err => {
         console.error('Error fetching jobs:', err);
@@ -30,7 +30,7 @@ function Users() {
 
   const fetchApplications = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/my-applications', {
+      const response = await axios.get('/my-applications', {
         headers: {
           'x-user-username': username,
           'x-user-role': role
@@ -52,7 +52,7 @@ function Users() {
   const handleDelete = (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this job?");
     if (confirmDelete) {
-      axios.delete(`http://localhost:3001/deleteuser/${id}`, {
+      axios.delete(`/deleteuser/${id}`, {
         headers: {
           'x-user-role': role,
           'x-user-username': username
@@ -80,7 +80,7 @@ function Users() {
 
       // Create FormData with resume file
       const formData = new FormData();
-      
+
       // Prompt user to select resume file for this specific application
       const file = await new Promise((resolve) => {
         const input = document.createElement('input');
@@ -97,14 +97,14 @@ function Users() {
 
       formData.append('resume', file);
 
-      const response = await axios.post(`http://localhost:3001/apply/${jobId}`, formData, {
+      const response = await axios.post(`/apply/${jobId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'x-user-username': username,
           'x-user-role': role
         }
       });
-      
+
       if (response.data.success) {
         // Refresh applications immediately
         await fetchApplications();
@@ -140,21 +140,21 @@ function Users() {
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div className="d-flex align-items-center">
               <h2 className="m-0 text-white fw-bold">Chakri Pao</h2>
-              <img 
-                src="logo.png" 
-                alt="Logo" 
+              <img
+                src="logo.png"
+                alt="Logo"
                 className="ms-3"
-                style={{ 
-                  width: '60px', 
+                style={{
+                  width: '60px',
                   height: '60px',
                   filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.3))'
-                }} 
+                }}
               />
             </div>
             <div className="d-flex align-items-center">
               {!role ? (
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="btn btn-primary"
                   style={{
                     borderRadius: '12px',
@@ -173,8 +173,8 @@ function Users() {
               ) : (
                 <>
                   {role === 'employer' && (
-                    <Link 
-                      to="/create" 
+                    <Link
+                      to="/create"
                       className="btn btn-success me-2"
                       style={{
                         borderRadius: '12px',
@@ -218,8 +218,8 @@ function Users() {
           </div>
 
           {error && (
-            <div 
-              className="alert alert-danger d-flex align-items-center mb-4" 
+            <div
+              className="alert alert-danger d-flex align-items-center mb-4"
               role="alert"
               style={{
                 backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -235,7 +235,7 @@ function Users() {
           <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {users.map((user, index) => (
               <div key={index} className="col">
-                <div 
+                <div
                   className="card h-100 border-0 shadow-lg rounded-4"
                   style={{
                     backdropFilter: 'blur(10px)',
@@ -249,12 +249,12 @@ function Users() {
                   <div className="card-body p-4">
                     <div className="d-flex justify-content-between align-items-start mb-3">
                       <div className="d-flex align-items-center">
-                        <img 
+                        <img
                           src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.companyname}&backgroundColor=1976d2&textColor=ffffff`}
                           alt={user.companyname}
                           className="rounded-circle me-3"
-                          style={{ 
-                            width: '50px', 
+                          style={{
+                            width: '50px',
                             height: '50px',
                             objectFit: 'cover',
                             border: '2px solid rgba(255, 255, 255, 0.2)',
@@ -263,7 +263,7 @@ function Users() {
                         />
                         <h5 className="card-title text-primary fw-bold mb-0">{user.companyname}</h5>
                       </div>
-                      <span 
+                      <span
                         className="badge rounded-pill"
                         style={{
                           backgroundColor: 'rgba(25, 118, 210, 0.1)',
@@ -280,7 +280,7 @@ function Users() {
                       {user.jobrole}
                     </h6>
                     <div className="d-flex align-items-center mb-3">
-                      <span 
+                      <span
                         className="badge rounded-pill px-3 py-2"
                         style={{
                           backgroundColor: 'rgba(46, 125, 50, 0.1)',
@@ -298,8 +298,8 @@ function Users() {
                     <div className="d-flex gap-2 mt-3">
                       {role === 'employer' && user.createdBy === username && (
                         <>
-                          <Link 
-                            to={`/update/${user._id}`} 
+                          <Link
+                            to={`/update/${user._id}`}
                             className='btn btn-outline-primary btn-sm flex-grow-1'
                             style={{
                               borderRadius: '8px',
@@ -330,13 +330,12 @@ function Users() {
                       )}
                       {role === 'jobseeker' && (
                         <button
-                          className={`btn btn-sm flex-grow-1 ${
-                            applications[user._id] ? (
+                          className={`btn btn-sm flex-grow-1 ${applications[user._id] ? (
                               applications[user._id] === 'accepted' ? 'btn-success disabled' :
-                              applications[user._id] === 'rejected' ? 'btn-danger disabled' :
-                              'btn-warning disabled'
+                                applications[user._id] === 'rejected' ? 'btn-danger disabled' :
+                                  'btn-warning disabled'
                             ) : 'btn-primary'
-                          }`}
+                            }`}
                           onClick={() => handleApply(user._id)}
                           disabled={applications[user._id]}
                           style={{
@@ -347,13 +346,12 @@ function Users() {
                             transition: 'all 0.3s ease'
                           }}
                         >
-                          <i className={`bi ${
-                            applications[user._id] ? (
+                          <i className={`bi ${applications[user._id] ? (
                               applications[user._id] === 'accepted' ? 'bi-check-circle' :
-                              applications[user._id] === 'rejected' ? 'bi-x-circle' :
-                              'bi-clock'
+                                applications[user._id] === 'rejected' ? 'bi-x-circle' :
+                                  'bi-clock'
                             ) : 'bi-send'
-                          } me-1`}></i>
+                            } me-1`}></i>
                           {applications[user._id] ? (
                             applications[user._id].charAt(0).toUpperCase() + applications[user._id].slice(1)
                           ) : 'Apply'}
@@ -374,12 +372,12 @@ function Users() {
         zIndex: 1000,
         fontSize: '1.05rem',
         letterSpacing: '0.5px',
-        boxShadow: '0 -2px 12px rgba(25, 118, 210, 0.08)', 
+        boxShadow: '0 -2px 12px rgba(25, 118, 210, 0.08)',
         background: 'rgba(37, 37, 37, 0.17)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)'
       }}>
-         <span className="fw-bold">Chakri Pao™</span>, est. 2025
+        <span className="fw-bold">Chakri Pao™</span>, est. 2025
       </footer>
     </>
   );

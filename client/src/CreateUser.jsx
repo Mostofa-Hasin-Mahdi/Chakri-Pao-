@@ -27,7 +27,7 @@ function CreateUser() {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/createuser", {
+      const response = await axios.post("/createuser", {
         companyname: Company,
         jobrole: JobRole,
         salary: Salary,
@@ -40,7 +40,7 @@ function CreateUser() {
           'x-user-username': username
         }
       });
-      
+
       console.log('Job created successfully:', response.data);
       navigate('/');
     } catch (err) {
@@ -73,7 +73,7 @@ function CreateUser() {
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
-            <div 
+            <div
               className="bg-white rounded-4 p-4 p-md-5 shadow-lg"
               style={{
                 backdropFilter: 'blur(10px)',
@@ -89,10 +89,10 @@ function CreateUser() {
                 </h2>
                 <ProfileMenu />
               </div>
-              
+
               {error && (
-                <div 
-                  className="alert alert-danger d-flex align-items-center mb-4" 
+                <div
+                  className="alert alert-danger d-flex align-items-center mb-4"
                   role="alert"
                   style={{
                     backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -104,15 +104,15 @@ function CreateUser() {
                   <div>{error}</div>
                 </div>
               )}
-              
+
               <form onSubmit={Submit}>
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-building me-2"></i>
                     Company Name
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="form-control form-control-lg"
                     value={Company}
                     onChange={(e) => setCompany(e.target.value)}
@@ -127,14 +127,14 @@ function CreateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-briefcase me-2"></i>
                     Job Role
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="form-control form-control-lg"
                     value={JobRole}
                     onChange={(e) => setJobrole(e.target.value)}
@@ -149,14 +149,14 @@ function CreateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-currency-dollar me-2"></i>
                     Salary
                   </label>
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     className="form-control form-control-lg"
                     value={Salary}
                     onChange={(e) => setSalary(e.target.value)}
@@ -171,14 +171,14 @@ function CreateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-people me-2"></i>
                     Vacancy
                   </label>
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     className="form-control form-control-lg"
                     value={Vacancy}
                     onChange={(e) => setVacancy(e.target.value)}
@@ -193,14 +193,14 @@ function CreateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="mb-4">
                   <label className="form-label text-muted fw-medium">
                     <i className="bi bi-geo-alt me-2"></i>
                     Location
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="form-control form-control-lg"
                     value={Location}
                     onChange={(e) => setLocation(e.target.value)}
@@ -215,10 +215,10 @@ function CreateUser() {
                     }}
                   />
                 </div>
-                
+
                 <div className="d-grid gap-3">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="btn btn-primary btn-lg"
                     disabled={isLoading}
                     style={{
@@ -244,9 +244,9 @@ function CreateUser() {
                       </>
                     )}
                   </button>
-                  
-                  <button 
-                    type="button" 
+
+                  <button
+                    type="button"
                     className="btn btn-outline-secondary btn-lg"
                     onClick={() => navigate('/')}
                     style={{

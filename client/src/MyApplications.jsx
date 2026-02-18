@@ -21,7 +21,7 @@ function MyApplications() {
 
   const fetchApplications = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/my-applications', {
+      const response = await axios.get('/my-applications', {
         headers: {
           'x-user-role': role,
           'x-user-username': username
@@ -64,8 +64,8 @@ function MyApplications() {
         </div>
 
         {error && (
-          <div 
-            className="alert alert-danger d-flex align-items-center mb-4" 
+          <div
+            className="alert alert-danger d-flex align-items-center mb-4"
             role="alert"
             style={{
               backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -87,7 +87,7 @@ function MyApplications() {
         ) : (
           <>
             {applications.length === 0 ? (
-              <div 
+              <div
                 className="text-center p-5"
                 style={{
                   backdropFilter: 'blur(10px)',
@@ -100,7 +100,7 @@ function MyApplications() {
                 <i className="bi bi-file-earmark-text text-primary" style={{ fontSize: '3rem' }}></i>
                 <h3 className="mt-3 text-primary">No Applications Yet</h3>
                 <p className="text-muted">You haven't applied for any jobs yet</p>
-                <button 
+                <button
                   className="btn btn-primary mt-3"
                   onClick={() => navigate('/')}
                   style={{
@@ -122,7 +122,7 @@ function MyApplications() {
               <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 {applications.filter(app => app.jobId).map((application) => (
                   <div key={application._id} className="col">
-                    <div 
+                    <div
                       className="card h-100 border-0 shadow-lg rounded-4"
                       style={{
                         backdropFilter: 'blur(10px)',
@@ -136,12 +136,12 @@ function MyApplications() {
                       <div className="card-body p-4">
                         <div className="d-flex justify-content-between align-items-start mb-3">
                           <div className="d-flex align-items-center">
-                            <img 
+                            <img
                               src={`https://api.dicebear.com/7.x/initials/svg?seed=${application.jobId?.companyname || 'Company'}&backgroundColor=1976d2&textColor=ffffff`}
                               alt={application.jobId?.companyname || 'Company'}
                               className="rounded-circle me-3"
-                              style={{ 
-                                width: '50px', 
+                              style={{
+                                width: '50px',
                                 height: '50px',
                                 objectFit: 'cover',
                                 border: '2px solid rgba(255, 255, 255, 0.2)',
@@ -152,18 +152,16 @@ function MyApplications() {
                               {application.jobId?.companyname || 'Unknown Company'}
                             </h5>
                           </div>
-                          <span 
-                            className={`badge rounded-pill px-3 py-2 ${
-                              application.status === 'accepted' ? 'bg-success' :
-                              application.status === 'rejected' ? 'bg-danger' :
-                              'bg-warning'
-                            }`}
+                          <span
+                            className={`badge rounded-pill px-3 py-2 ${application.status === 'accepted' ? 'bg-success' :
+                                application.status === 'rejected' ? 'bg-danger' :
+                                  'bg-warning'
+                              }`}
                           >
-                            <i className={`bi ${
-                              application.status === 'accepted' ? 'bi-check-circle' :
-                              application.status === 'rejected' ? 'bi-x-circle' :
-                              'bi-clock'
-                            } me-1`}></i>
+                            <i className={`bi ${application.status === 'accepted' ? 'bi-check-circle' :
+                                application.status === 'rejected' ? 'bi-x-circle' :
+                                  'bi-clock'
+                              } me-1`}></i>
                             {application.status ? application.status.charAt(0).toUpperCase() + application.status.slice(1) : 'Pending'}
                           </span>
                         </div>
@@ -174,7 +172,7 @@ function MyApplications() {
                         </h6>
 
                         <div className="d-flex align-items-center mb-3">
-                          <span 
+                          <span
                             className="badge rounded-pill px-3 py-2"
                             style={{
                               backgroundColor: 'rgba(46, 125, 50, 0.1)',
