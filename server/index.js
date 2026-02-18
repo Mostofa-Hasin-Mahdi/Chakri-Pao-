@@ -8,7 +8,7 @@ const fs = require('fs');
 const UserModel = require('./models/Users');
 const UsersInfoModel = require('./models/usersinfo');
 const ApplicationModel = require('./models/Applications');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 app.use(cors());
