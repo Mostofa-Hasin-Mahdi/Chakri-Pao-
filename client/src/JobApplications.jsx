@@ -216,7 +216,7 @@ function JobApplications() {
                             <h5 className="card-title text-primary fw-bold mb-0">{application.jobseeker}</h5>
                             <p className="text-muted m-0">
                               <i className="bi bi-clock me-1"></i>
-                              Applied {new Date(application.createdAt).toLocaleDateString()}
+                              Applied {new Date(application.createdAt || parseInt(application._id.substring(0, 8), 16) * 1000).toLocaleDateString()}
                             </p>
                           </div>
                         </div>
