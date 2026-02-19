@@ -156,17 +156,17 @@ function JobApplications() {
                   boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
                 }}
               >
-                <h3 className="text-primary fw-bold mb-3">{jobDetails.companyname}</h3>
-                <div className="d-flex gap-3">
-                  <span className="badge bg-primary rounded-pill">
+                <h3 className="text-primary fw-bold mb-3 text-break">{jobDetails.companyname}</h3>
+                <div className="d-flex gap-3 flex-wrap">
+                  <span className="badge bg-primary rounded-pill text-wrap">
                     <i className="bi bi-briefcase me-1"></i>
                     {jobDetails.jobrole}
                   </span>
-                  <span className="badge bg-success rounded-pill">
+                  <span className="badge bg-success rounded-pill text-wrap">
                     <i className="bi bi-currency-dollar me-1"></i>
                     {jobDetails.salary}
                   </span>
-                  <span className="badge bg-info rounded-pill">
+                  <span className="badge bg-info rounded-pill text-wrap">
                     <i className="bi bi-geo-alt me-1"></i>
                     {jobDetails.location}
                   </span>
