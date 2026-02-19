@@ -12,6 +12,7 @@ import Profile from './Profile';
 import MyJobs from './MyJobs';
 import MyApplications from './MyApplications';
 import JobApplications from './JobApplications';
+import Home from './Home';
 
 function App() {
   const [role, setRole] = useState(null); // 'employer', 'jobseeker', or null
@@ -30,11 +31,13 @@ function App() {
     };
     wakeUpServer();
   }, []);
+
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Users />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/jobs" element={<Users />} />
           <Route path="/login" element={<Login setRole={setRole} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/create" element={<CreateUser />} />
