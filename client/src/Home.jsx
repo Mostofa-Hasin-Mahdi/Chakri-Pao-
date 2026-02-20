@@ -132,7 +132,7 @@ function Home() {
                                 <div className="d-flex gap-2">
                                     <span className="badge bg-light text-dark">Remote</span>
                                     <span className="badge bg-light text-dark">Full-time</span>
-                                    <span className="badge bg-light text-dark">$80k - $120k</span>
+                                    <span className="badge bg-light text-dark">৳80k - ৳120k</span>
                                 </div>
                             </div>
 
