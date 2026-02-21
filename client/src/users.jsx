@@ -8,11 +8,13 @@ function Users() {
   const [error, setError] = useState('');
   const [applications, setApplications] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const role = localStorage.getItem('role');
   const username = localStorage.getItem('username');
 
   useEffect(() => {
+    setIsLoading(true);
     fetchUsers();
     if (role === 'jobseeker') {
       fetchApplications();
@@ -21,10 +23,14 @@ function Users() {
 
   const fetchUsers = () => {
     axios.get(`?search=${searchTerm}`)
-      .then(result => setUsers(result.data))
+      .then(result => {
+        setUsers(result.data);
+        setIsLoading(false);
+      })
       .catch(err => {
         console.error('Error fetching jobs:', err);
         setError('Failed to fetch jobs');
+        setIsLoading(false);
       });
   };
 
@@ -232,137 +238,147 @@ function Users() {
             </div>
           )}
 
-          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {users.map((user, index) => (
-              <div key={index} className="col">
-                <div
-                  className="card h-100 border-0 shadow-lg rounded-4"
-                  style={{
-                    backdropFilter: 'blur(10px)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    transition: 'transform 0.3s ease'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-                  onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                >
-                  <div className="card-body p-4">
-                    <div className="d-flex justify-content-between align-items-start mb-3">
-                      <div className="d-flex align-items-center">
-                        <img
-                          src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.companyname}&backgroundColor=1976d2&textColor=ffffff`}
-                          alt={user.companyname}
-                          className="rounded-circle me-3"
+          {isLoading ? (
+            <div className="d-flex flex-column justify-content-center align-items-center py-5">
+              <div className="spinner-border text-light" style={{ width: '4rem', height: '4rem' }} role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <h4 className="text-white mt-3 fw-bold">Waking up server & loading jobs...</h4>
+              <p className="text-white-50">(This might take up to a minute if the server was asleep)</p>
+            </div>
+          ) : (
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              {users.map((user, index) => (
+                <div key={index} className="col">
+                  <div
+                    className="card h-100 border-0 shadow-lg rounded-4"
+                    style={{
+                      backdropFilter: 'blur(10px)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      transition: 'transform 0.3s ease'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                    onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                  >
+                    <div className="card-body p-4">
+                      <div className="d-flex justify-content-between align-items-start mb-3">
+                        <div className="d-flex align-items-center">
+                          <img
+                            src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.companyname}&backgroundColor=1976d2&textColor=ffffff`}
+                            alt={user.companyname}
+                            className="rounded-circle me-3"
+                            style={{
+                              width: '50px',
+                              height: '50px',
+                              objectFit: 'cover',
+                              border: '2px solid rgba(255, 255, 255, 0.2)',
+                              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                            }}
+                          />
+                          <h5 className="card-title text-primary fw-bold mb-0">{user.companyname}</h5>
+                        </div>
+                        <span
+                          className="badge rounded-pill"
                           style={{
-                            width: '50px',
-                            height: '50px',
-                            objectFit: 'cover',
-                            border: '2px solid rgba(255, 255, 255, 0.2)',
-                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                            backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                            color: '#1976d2',
+                            padding: '8px 12px',
+                            fontSize: '0.9rem'
                           }}
-                        />
-                        <h5 className="card-title text-primary fw-bold mb-0">{user.companyname}</h5>
+                        >
+                          {user.vacancy} Vacancies
+                        </span>
                       </div>
-                      <span
-                        className="badge rounded-pill"
-                        style={{
-                          backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                          color: '#1976d2',
-                          padding: '8px 12px',
-                          fontSize: '0.9rem'
-                        }}
-                      >
-                        {user.vacancy} Vacancies
-                      </span>
-                    </div>
-                    <h6 className="card-subtitle mb-3 text-muted">
-                      <i className="bi bi-briefcase me-2"></i>
-                      {user.jobrole}
-                    </h6>
-                    <div className="d-flex align-items-center mb-3">
-                      <span
-                        className="badge rounded-pill px-3 py-2"
-                        style={{
-                          backgroundColor: 'rgba(46, 125, 50, 0.1)',
-                          color: '#2e7d32',
-                          fontSize: '0.9rem'
-                        }}
-                      >
-                        Tk. {user.salary}
-                      </span>
-                    </div>
-                    <p className="card-text text-muted">
-                      <i className="bi bi-geo-alt me-2"></i>
-                      {user.location}
-                    </p>
-                    <div className="d-flex gap-2 mt-3">
-                      {role === 'employer' && user.createdBy === username && (
-                        <>
-                          <Link
-                            to={`/update/${user._id}`}
-                            className='btn btn-outline-primary btn-sm flex-grow-1'
-                            style={{
-                              borderRadius: '8px',
-                              padding: '8px 16px',
-                              fontSize: '0.9rem',
-                              fontWeight: '500',
-                              transition: 'all 0.3s ease'
-                            }}
-                          >
-                            <i className="bi bi-pencil me-1"></i>
-                            Update
-                          </Link>
+                      <h6 className="card-subtitle mb-3 text-muted">
+                        <i className="bi bi-briefcase me-2"></i>
+                        {user.jobrole}
+                      </h6>
+                      <div className="d-flex align-items-center mb-3">
+                        <span
+                          className="badge rounded-pill px-3 py-2"
+                          style={{
+                            backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                            color: '#2e7d32',
+                            fontSize: '0.9rem'
+                          }}
+                        >
+                          Tk. {user.salary}
+                        </span>
+                      </div>
+                      <p className="card-text text-muted">
+                        <i className="bi bi-geo-alt me-2"></i>
+                        {user.location}
+                      </p>
+                      <div className="d-flex gap-2 mt-3">
+                        {role === 'employer' && user.createdBy === username && (
+                          <>
+                            <Link
+                              to={`/update/${user._id}`}
+                              className='btn btn-outline-primary btn-sm flex-grow-1'
+                              style={{
+                                borderRadius: '8px',
+                                padding: '8px 16px',
+                                fontSize: '0.9rem',
+                                fontWeight: '500',
+                                transition: 'all 0.3s ease'
+                              }}
+                            >
+                              <i className="bi bi-pencil me-1"></i>
+                              Update
+                            </Link>
+                            <button
+                              className='btn btn-outline-danger btn-sm flex-grow-1'
+                              onClick={() => handleDelete(user._id)}
+                              style={{
+                                borderRadius: '8px',
+                                padding: '8px 16px',
+                                fontSize: '0.9rem',
+                                fontWeight: '500',
+                                transition: 'all 0.3s ease'
+                              }}
+                            >
+                              <i className="bi bi-trash me-1"></i>
+                              Delete
+                            </button>
+                          </>
+                        )}
+                        {role === 'jobseeker' && (
                           <button
-                            className='btn btn-outline-danger btn-sm flex-grow-1'
-                            onClick={() => handleDelete(user._id)}
-                            style={{
-                              borderRadius: '8px',
-                              padding: '8px 16px',
-                              fontSize: '0.9rem',
-                              fontWeight: '500',
-                              transition: 'all 0.3s ease'
-                            }}
-                          >
-                            <i className="bi bi-trash me-1"></i>
-                            Delete
-                          </button>
-                        </>
-                      )}
-                      {role === 'jobseeker' && (
-                        <button
-                          className={`btn btn-sm flex-grow-1 ${applications[user._id] ? (
+                            className={`btn btn-sm flex-grow-1 ${applications[user._id] ? (
                               applications[user._id] === 'accepted' ? 'btn-success disabled' :
                                 applications[user._id] === 'rejected' ? 'btn-danger disabled' :
                                   'btn-warning disabled'
                             ) : 'btn-primary'
-                            }`}
-                          onClick={() => handleApply(user._id)}
-                          disabled={applications[user._id]}
-                          style={{
-                            borderRadius: '8px',
-                            padding: '8px 16px',
-                            fontSize: '0.9rem',
-                            fontWeight: '500',
-                            transition: 'all 0.3s ease'
-                          }}
-                        >
-                          <i className={`bi ${applications[user._id] ? (
+                              }`}
+                            onClick={() => handleApply(user._id)}
+                            disabled={applications[user._id]}
+                            style={{
+                              borderRadius: '8px',
+                              padding: '8px 16px',
+                              fontSize: '0.9rem',
+                              fontWeight: '500',
+                              transition: 'all 0.3s ease'
+                            }}
+                          >
+                            <i className={`bi ${applications[user._id] ? (
                               applications[user._id] === 'accepted' ? 'bi-check-circle' :
                                 applications[user._id] === 'rejected' ? 'bi-x-circle' :
                                   'bi-clock'
                             ) : 'bi-send'
-                            } me-1`}></i>
-                          {applications[user._id] ? (
-                            applications[user._id].charAt(0).toUpperCase() + applications[user._id].slice(1)
-                          ) : 'Apply'}
-                        </button>
-                      )}
+                              } me-1`}></i>
+                            {applications[user._id] ? (
+                              applications[user._id].charAt(0).toUpperCase() + applications[user._id].slice(1)
+                            ) : 'Apply'}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <footer className="text-grey text-center py-1 mt-auto w-100" style={{
